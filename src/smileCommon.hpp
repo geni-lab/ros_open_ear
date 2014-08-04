@@ -203,10 +203,15 @@ DLLEXPORT int clock_gettime(int clock_id, struct timespec *tp);
 #define smileMutexTryLock(mtx) pthread_mutex_trylock(&(mtx))
 #define smileMutexDestroy(mtx) pthread_mutex_destroy(&(mtx))
 
+#ifndef SMILECOND_DEFINED
+#define SMILECOND_DEFINED
+
 typedef struct {
   pthread_mutex_t mtx;
   pthread_cond_t  cond;
 } smileCond;
+
+#endif
 
 #define smileCondInitVar(COND) COND.mtx = PTHREAD_MUTEX_INITIALIZER; COND.cond = PTHREAD_COND_INITIALIZER
 #define smileCondCreate(COND) pthread_mutex_init(&(COND.mtx), NULL); pthread_cond_init(&(COND.cond), NULL)

@@ -47,6 +47,9 @@ class cSmileComponent;
 #define CMSG_typenameLen  32
 #define CMSG_nUserData     8
 
+#define smileMutexLock(mtx) (pthread_mutex_lock(&(mtx))==0)
+#define smileMutexUnlock(mtx) pthread_mutex_unlock(&(mtx))
+
 class cComponentMessage {
 public:
   char msgtype[CMSG_typenameLen];     // message type name (used by receiver to identify message), set by constructor

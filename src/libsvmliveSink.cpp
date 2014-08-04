@@ -41,6 +41,7 @@ LibSVM live classifier/regressor
 
 #include <libsvmliveSink.hpp>
 
+
 #define MODULE "cLibsvmLiveSink"
 
 
@@ -89,6 +90,9 @@ cLibsvmLiveSink::cLibsvmLiveSink(const char *_name) :
   outputSelIdx.enabled = NULL;
   outputSelStr.n = 0;
   outputSelStr.names = NULL;
+
+  emo_pub = n.advertise<std_msgs::String>("emo_pub", 1000);
+  affect_pub = n.advertise<std_msgs::String>("affect_pub", 1000);
 }
 
 void cLibsvmLiveSink::fetchConfig()
@@ -310,6 +314,50 @@ int cLibsvmLiveSink::myFinaliseInstance()
 
 void cLibsvmLiveSink::processResult(long long tick, long frameIdx, double time, float res, double *probEstim, int nClasses, double dur)
 {
+  //ros::Rate loop_rate(10);
+
+//  int count = 0;
+//  while (ros::ok())
+//  {
+//// %EndTag(ROS_OK)%
+//    /**
+//     * This is a message object. You stuff it with data, and then publish it.
+//     */
+//// %Tag(FILL_MESSAGE)%
+//    std_msgs::String msg;
+
+//    std::stringstream ss;
+//    ss << "hello world " << count;
+//    msg.data = ss.str();
+//// %EndTag(FILL_MESSAGE)%
+
+//// %Tag(ROSCONSOLE)%
+//    ROS_INFO("%s", msg.data.c_str());
+//// %EndTag(ROSCONSOLE)%
+
+//    /**
+//     * The publish() function is how you send messages. The parameter
+//     * is the message object. The type of this object must agree with the type
+//     * given as a template parameter to the advertise<>() call, as was done
+//     * in the constructor above.
+//     */
+//// %Tag(PUBLISH)%
+//    chatter_pub.publish(msg);
+//// %EndTag(PUBLISH)%
+
+//// %Tag(SPINONCE)%
+//    ros::spinOnce();
+//// %EndTag(SPINONCE)%
+
+//// %Tag(RATE_SLEEP)%
+//    loop_rate.sleep();
+//// %EndTag(RATE_SLEEP)%
+//    ++count;
+//  }
+
+  std_msgs::String emoMsg;
+  std_msgs::String affectMsg;
+
   if (printResult) {
     if ((nCls>0)&&(nClasses > 0)&&(classNames != NULL)) {
       if (labels!=NULL) {
@@ -319,9 +367,22 @@ void cLibsvmLiveSink::processResult(long long tick, long frameIdx, double time, 
       }
       if ((int)res >= nCls) res = (float)nCls;
       if (res < 0.0) res = 0.0;
-      SMILE_PRINT("\n LibSVM  '%s' result (@ time: %f) :  ~~> %s <~~",getInstName(),time,classNames[(int)res]);
+      SMILE_PRINT("\n LibSAVM  '%s' result (@ time: %f) :  ~~> %s <~~",getInstName(),time,classNames[(int)res]);
+      std::string instName = getInstName();
+      std::string emoName = "emodbEmotion";
+      std::string affectName = "abcAffect";
+      if (instName == emoName)
+      {
+          emoMsg.data = classNames[(int)res];
+          emo_pub.publish(emoMsg);
+      }
+      if (instName == affectName)
+      {
+          affectMsg.data = classNames[(int)res];
+          affect_pub.publish(affectMsg);
+      }
     } else {
-      SMILE_PRINT("\n LibSVM  '%s' result (@ time: %f) :  ~~> %.2f <~~",getInstName(),time,res);
+      SMILE_PRINT("\n LibSBVM  '%s' result (@ time: %f) :  ~~> %.2f <~~",getInstName(),time,res);
     }
     if (probEstim != NULL) {
       int i;
@@ -338,6 +399,7 @@ void cLibsvmLiveSink::processResult(long long tick, long frameIdx, double time, 
       }
     }
   }
+
 
   // send result as componentMessage 
   if (sendResult) {

@@ -48,6 +48,10 @@ inherit this class, if you want custom handling of classifier output values..
 #include <dataSink.hpp>
 #include <svm/svm.h>
 
+#include <ros/ros.h>
+#include <ros/node_handle.h>
+#include "std_msgs/String.h"
+
 #define COMPONENT_DESCRIPTION_CLIBSVMLIVESINK "classifies data from dataMemory directly using the LibSVM library"
 #define COMPONENT_NAME_CLIBSVMLIVESINK "cLibsvmLiveSink"
 
@@ -108,6 +112,11 @@ class cLibsvmLiveSink : public cDataSink {
     int loadSelection( const char *selFile );
     int buildEnabledSelFromNames(long N, const FrameMetaInfo *fmeta);
     int loadClasses( const char *file );
+
+    ros::NodeHandle n;
+    ros::Publisher emo_pub;
+    ros::Publisher affect_pub;
+
 
   protected:
     SMILECOMPONENT_STATIC_DECL_PR

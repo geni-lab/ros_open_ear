@@ -40,6 +40,17 @@
 // this is the name of the configuration instance in the config file the component manager will search for:
 #define CM_CONF_INST  "componentInstances"
 
+#ifndef SMILECOND_DEFINED
+#define SMILECOND_DEFINED
+
+typedef struct {
+  pthread_mutex_t mtx;
+  pthread_cond_t  cond;
+} smileCond;
+
+#endif
+
+
 
 // global component list: -----------------
 class cComponentManager;

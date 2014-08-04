@@ -70,6 +70,8 @@ Log Levels for Warnings:
 #ifndef __SMILE_LOGGER_HPP
 #define __SMILE_LOGGER_HPP
 
+#define smileMutex pthread_mutex_t
+
 #include <smileCommon.hpp>
 
 
