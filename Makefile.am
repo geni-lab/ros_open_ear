@@ -106,7 +106,9 @@ bin_PROGRAMS =
 	src/semaineEmmaSender.cpp 
 
   SMILE_CPPFLAGS = -Isrc $(SEMAINEAPI_CPPFLAGS) $(PORTAUDIO_CPPFLAGS) -ggdb $(ATKLIB_CPPFLAGS) $(PTHREAD_CFLAGS) $(RTNNLLIB_CFLAGS)
-  SMILE_LIBS = $(PORTAUDIO_LDFLAGS) -lm $(SEMAINEAPI_LDFLAGS) $(ATKLIB_LDFLAGS) $(PTHREAD_LIBS) $(DLIB) $(RTNNLLIB_LIBS)
+  SMILE_LIBS = $(PORTAUDIO_LDFLAGS) -lm $(SEMAINEAPI_LDFLAGS) $(ATKLIB_LDFLAGS) $(PTHREAD_LIBS) $(DLIB) $(RTNNLLIB_LIBS) -L/opt/ros/indigo/lib -lroscpp
+
+$(info PThread = $(PTHREAD_LIBS))
    
   SMILExtract_SOURCES = src/SMILExtract.cpp 
   SMILExtract_CPPFLAGS = $(SMILE_CPPFLAGS)
@@ -120,7 +122,7 @@ bin_PROGRAMS =
   libopensmile_la_SOURCES = $(SMILE_SOURCES)
   libopensmile_la_CPPFLAGS = $(SMILE_CPPFLAGS)
   libopensmile_la_LIBADD = $(SMILE_LIBS)
-  libopensmile_la_LDFLAGS = -no-undefined
+  libopensmile_la_LDFLAGS = --no-undefined
 
 
 # endif 
